@@ -1,0 +1,8 @@
+# Initializing a Debug build
+#   conan install .. --build missing -s build_type=Debug
+
+[requires]
+boost/1.74.0
+
+[generators]
+cmake
