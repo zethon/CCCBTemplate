@@ -6,3 +6,7 @@ boost/1.74.0
 
 [generators]
 cmake
+
+[options]
+boost:without_fiber=True
+boost:without_nowide=True
