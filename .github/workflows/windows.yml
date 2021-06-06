@@ -1,0 +1,55 @@
+name: windows
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/windows.yml
+      - CMakeLists.txt
+      - CMake/**
+      - src/**
+      - test/**
+  pull_request:
+    paths:
+      - .github/workflows/windows.yml
+      - CMakeLists.txt
+      - CMake/**
+      - src/**
+      - test/**
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2.3.2
+
+    - name: Get Conan
+      uses: turtlebrowser/get-conan@v1.0
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_UNIT_TESTS=ON
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Tests
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: ctest -VV -C $BUILD_TYPE
+

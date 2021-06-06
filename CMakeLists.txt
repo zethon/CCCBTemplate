@@ -1,28 +1,41 @@
-project(SimpleApp)
-cmake_minimum_required(VERSION 3.12)
-set(CMAKE_CXX_STANDARD 20)
+cmake_minimum_required(VERSION 3.20)
 
-# this is needed for the cmake conan files that
-# get generated
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+project(CCCBTemplate)
 
-# initialize conan libs
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+option(BUILD_UNIT_TESTS "Build unit tests (default OFF)" OFF)
+option(CODE_COVERAGE "Enable coverage reporting (default OFF)" OFF)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(CMake/conan.cmake)
+conan_cmake_run(REQUIRES
+    boost/1.74.0
+    BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+    BUILD missing
+    OPTIONS
+        boost:without_contract=False
+        boost:without_test=False
+        boost:without_filesystem=False)
 conan_basic_setup(NO_OUTPUT_DIRS KEEP_RPATHS)
 
-set(SOURCE_FILES
-    main.cpp
-)
+add_library(coverage_config INTERFACE)
 
-set(HEADER_FILES
-)
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # Add required flags (GCC & LLVM/Clang)
+    target_compile_options(coverage_config INTERFACE
+        -O0        # no optimization
+        -g         # generate debug info
+        --coverage # sets all required flags
+    )
 
-add_executable("${CMAKE_PROJECT_NAME}"
-    ${SOURCE_FILES}
-    ${HEADER_FILES}
-)
+    target_link_options(coverage_config INTERFACE --coverage)
+endif(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
-target_link_libraries("${CMAKE_PROJECT_NAME}"
-    PUBLIC
-        ${CONAN_LIBS}
-)
+
+add_subdirectory(src)
+
+if (BUILD_UNIT_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
