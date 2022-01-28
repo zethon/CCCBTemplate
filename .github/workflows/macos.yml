@@ -45,7 +45,7 @@ jobs:
     - name: Set Xcode 11.3
       run: |
         ls -al /Applications
-        sudo xcode-select -s /Applications/Xcode_12.0.app/Contents/Developer
+        sudo xcode-select -s /Applications/Xcode_12.5.app/Contents/Developer
         clang -v
 
     - name: Get Conan
