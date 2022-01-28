@@ -42,7 +42,7 @@ jobs:
         brew upgrade cmake
         cmake --version
 
-    - name: Set Xcode 11.3
+    - name: Set Xcode 12.5
       run: |
         ls -al /Applications
         sudo xcode-select -s /Applications/Xcode_12.5.app/Contents/Developer
