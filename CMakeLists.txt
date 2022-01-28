@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(CMake/conan.cmake)
 conan_cmake_run(REQUIRES
-    boost/1.75.0
+    boost/1.74.0
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     BUILD missing
     OPTIONS
@@ -20,7 +20,7 @@ conan_cmake_run(REQUIRES
         boost:without_filesystem=False 
         boost:without_system=False 
         boost:without_exception=False
-        boost:without_contract=False        
+        boost:without_contract=False
 )
 conan_basic_setup(NO_OUTPUT_DIRS KEEP_RPATHS)
 
