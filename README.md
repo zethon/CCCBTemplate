@@ -1,6 +1,6 @@
 # A C++, CMake, Conan, Boost Template
 
-This simple project shows how to use CMake and Conan to create a C++ project that uses the boost framework.
+This simple project that shows how to use CMake and Conan to create a C++ project that uses the boost framework.
 
 ## Building
 
